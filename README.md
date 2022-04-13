@@ -2,7 +2,9 @@
 ## Implementation Plan
 * Team member
 
+
     Shengjie Lin
+    Hamlet Fernandez
 * How I will initialize my particle cloud
 
     Sample uniformly in the state space. To test it, I will draw the particles and check whether they are about uniformly distributed in the map.
