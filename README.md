@@ -2,8 +2,7 @@
 ## Implementation Plan
 * Team member
 
-
-    Shengjie Lin
+    Shengjie Lin  
     Hamlet Fernandez
 * How I will initialize my particle cloud
 
