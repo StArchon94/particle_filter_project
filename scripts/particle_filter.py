@@ -1,22 +1,16 @@
 #!/usr/bin/env python3
 
-import rospy
-
-from nav_msgs.msg import OccupancyGrid
-from geometry_msgs.msg import Quaternion, Point, Pose, PoseArray, PoseStamped
-from sensor_msgs.msg import LaserScan
-from std_msgs.msg import Header, String
-
-import tf
-from tf import TransformListener
-from tf import TransformBroadcaster
-from tf.transformations import quaternion_from_euler, euler_from_quaternion
-
-import numpy as np
-from numpy.random import random_sample
 import math
 
-from random import randint, random
+import numpy as np
+import rospy
+from geometry_msgs.msg import Point, Pose, PoseArray, PoseStamped, Quaternion
+from nav_msgs.msg import OccupancyGrid
+from sensor_msgs.msg import LaserScan
+from std_msgs.msg import Header
+from tf import TransformBroadcaster, TransformListener
+from tf.transformations import euler_from_quaternion, quaternion_from_euler
+
 from likelihood_field import LikelihoodField
 
 
@@ -86,8 +80,8 @@ class ParticleFilter:
         self.map = Map(self.likelihood_field.map)
 
         # the number of particles used in the particle filter
-        # self.num_particles = 10000
-        self.num_particles = 30
+        self.num_particles = 10000
+        # self.num_particles = 30
 
         # initialize the particle cloud array
         self.particle_cloud = []
@@ -109,9 +103,6 @@ class ParticleFilter:
         # publish the estimated robot pose
         self.robot_estimate_pub = rospy.Publisher("estimated_robot_pose", PoseStamped, queue_size=10)
 
-        # subscribe to the map server
-        # rospy.Subscriber(self.map_topic, OccupancyGrid, self.get_map)
-
         # subscribe to the lidar scan from the robot
         rospy.Subscriber(self.scan_topic, LaserScan, self.robot_scan_received)
 
@@ -130,13 +121,6 @@ class ParticleFilter:
         self.sigma_t = 0.01
 
         self.initialized = True
-
-    # def get_map(self, data):
-    #     self.map = data
-    #     p = data.info.origin.position
-    #     self.l = p.x
-    #     self.b = p.y
-    #     self.t =
 
     def initialize_particle_cloud(self):
         i = 0
@@ -299,8 +283,6 @@ class ParticleFilter:
             t_ = t + np.random.standard_normal() * self.sigma_t
             r2_ = r2 + np.random.standard_normal() * self.sigma_r
             p = particle.pose
-            x = p.position.x
-            y = p.position.y
             theta = get_yaw_from_pose(p)
             p.position.x += t_ * np.cos(theta + r1_)
             p.position.y += t_ * np.sin(theta + r1_)
