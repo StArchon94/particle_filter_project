@@ -119,7 +119,7 @@ class ParticleFilter:
         self.initialize_particle_cloud()
 
         # parameters for the measurement update model
-        self.z_hit = 0.8
+        self.z_hit = 0.9
         self.z_random = 0.1
         self.sigma_dist = 0.1
 
@@ -248,6 +248,9 @@ class ParticleFilter:
         self.robot_estimate = Pose(Point(x_sum / self.num_particles, y_sum / self.num_particles, 0), Quaternion(*quaternion_from_euler(0, 0, ang_sum / self.num_particles)))
 
     def update_particle_weights_with_measurement_model(self, data):
+        # compute the importance weight for each particle
+        # according to its state and measurement data
+        # using the likelihood field model
         for particle in self.particle_cloud:
             q = 1
             ang = get_yaw_from_pose(particle.pose)
