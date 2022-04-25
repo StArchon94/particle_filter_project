@@ -6,7 +6,6 @@ from copy import deepcopy
 import numpy as np
 import rospy
 from geometry_msgs.msg import Point, Pose, PoseArray, PoseStamped, Quaternion
-from nav_msgs.msg import OccupancyGrid
 from sensor_msgs.msg import LaserScan
 from std_msgs.msg import Header
 from tf import TransformBroadcaster, TransformListener
@@ -37,9 +36,7 @@ def compute_prob_zero_centered_gaussian(dist, sd):
 
 
 class Particle:
-
     def __init__(self, pose, w=1):
-
         # particle pose (Pose object from geometry_msgs)
         self.pose = pose
 
