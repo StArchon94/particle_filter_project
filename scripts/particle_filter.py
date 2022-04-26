@@ -82,7 +82,7 @@ class ParticleFilter:
         self.map = Map(self.likelihood_field.map)
 
         # the number of particles used in the particle filter
-        self.num_particles = 10000
+        self.num_particles = 3000
 
         # initialize the particle cloud array
         self.particle_cloud = []
