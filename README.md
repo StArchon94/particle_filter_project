@@ -3,7 +3,6 @@
 * Team member
 
     Shengjie Lin  
-    Hamlet Fernandez
 * How I will initialize my particle cloud
 
     Sample uniformly in the state space. To test it, I will draw the particles and check whether they are about uniformly distributed in the map.
@@ -36,7 +35,6 @@ Robot localization seeks to answer the question of "where am I?" from the robot'
 Specifically, I will use the particle filter algorithm for localization. The probabilistic distribution of the robot state is represented by a set of particles, each with its own state. For each iteration, the motion model uses $u_t$ to update each particle's state as prediction. Then the measurement model evaluates the likelihood of each particle's state against $z_t$ and the map. Finally, these likelihood values are normalized and used as weights during resampling. After these steps, we now have the updated set of particles representing the current belief of the robot state.
 ## GIF
 ![particle_filter](particle_filter.gif)
-TODO: rosbag record -O filename.bag /map /scan /cmd_vel /particle_cloud /estimated_robot_pose
 ## Code explanation
 ### Initialization of particle cloud
 * Code location
@@ -86,7 +84,7 @@ TODO: rosbag record -O filename.bag /map /scan /cmd_vel /particle_cloud /estimat
     Line 84 to 85, 93 to 95 and 121 to 134.
 * Code description
 
-    To reduce computational burden, I change the number of particles from 10000 to 3000. The threshold values for linear and angular movement before an update is performed are set as suggested. The `z` values are empirically set to model cases where a ray hits the obstacle or is working at random. `self.sigma_dist` is the standard deviation for the Gaussian noise in likelihood field model. Setting it to a larger value will account for larger noise, allowing more tolerance in the measurement update. `self.sigma_t` and `self.sigma_r` are Gaussian noise parameters for the motion prediction model. I set them to be 1/10 of the linear and angular movement threshold values before motion update. `self.delta_ang` is the subsampling rate at which `ranges` data are used. `self.default_dist` is used when the query point in `get_closest_obstacle_distance` method is out of the map.
+    To reduce computational burden, I change the number of particles from 10000 to 3000. The threshold values for linear and angular movement before an update is performed are set as suggested. The `z` values are empirically set to model cases where a ray hits the obstacle or is working at random. `self.sigma_dist` is the standard deviation for the Gaussian noise in likelihood field model. Setting it to a larger value will account for larger noise, allowing more tolerance in the measurement update. `self.sigma_t` and `self.sigma_r` are Gaussian noise parameters for the motion prediction model. I set them to be 1/10 of the linear and angular movement threshold values used for motion update check. `self.delta_ang` is the subsampling rate at which `ranges` data are used. `self.default_dist` is used when the query point in `get_closest_obstacle_distance` method is out of the map.
 ## Challenges
 There are two issues that take me quite a while to figure out. One is that the initialized particles won't show up on the map after being published. Later I realized that it takes a while before a node can publish messages after its initialization. The other issue costs me significantly more time. It turns out that when I resample the particles using `numpy.random.choice` with replacement, the returned list can contain particles referencing to the same one in the original set. Therefore, in the motion update step, modifying one particle will potentially also change some others, leading to weird behaviors. To fix this issue, I need to create deep copies of the original particles during resampling.
 ## Future work
